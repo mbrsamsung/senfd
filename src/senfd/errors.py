@@ -5,8 +5,6 @@ from typing import Any, Dict, List
 
 from pydantic import BaseModel
 
-from senfd.documents.base import to_file
-
 TableOfFiguresError = namedtuple("TableOfFiguresError", ["message", "caption"])
 
 TableCaptionError = namedtuple("TableCaptionError", ["message", "caption"])
@@ -35,6 +33,7 @@ def error_to_dict(error: TableError) -> Dict[str, List[Any]]:
 
 
 def to_log_file(errors: List[TableError], filename: str, output: Path) -> Path:
+    from senfd.documents.base import to_file
 
     content = json.dumps(
         [{"type": type(error).__name__, **error_to_dict(error)} for error in errors],

@@ -16,10 +16,10 @@ from typing import Any, ClassVar, Dict, List, Optional, Tuple
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pydantic import BaseModel, Field, ValidationError
 
-from senfd.errors import TableError
 import senfd.figures
 import senfd.schemas
 import senfd.tables
+from senfd.errors import TableError
 
 TRANSLATION_TABLE: Dict[int, str] = str.maketrans(
     {
@@ -104,6 +104,7 @@ class Document(BaseModel):
     def to_schema_file(cls, path: Optional[Path] = None) -> Path:
         """Writes the document JSON schema to file at the given 'path'"""
 
+        # TODO: schema method is deprecated
         return to_file(
             json.dumps(cls.schema(), indent=4),
             cls.schema_filename(),
@@ -153,6 +154,7 @@ class Document(BaseModel):
         """Returns True when validator raises no exceptions, False otherwise"""
 
         try:
+            # TODO: validate & dict are deprecated
             self.validate(self.dict())
         except ValidationError as e:
             print(e)
@@ -162,7 +164,6 @@ class Document(BaseModel):
 
 
 class Converter(ABC):
-
     @staticmethod
     @abstractmethod
     def is_applicable(path: Path) -> bool:

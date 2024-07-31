@@ -12,18 +12,16 @@ from senfd.tables import Cell, Row, Table
 
 
 class FigureDocument(Document):
-
     SUFFIX_JSON: ClassVar[str] = ".figure.document.json"
     SUFFIX_HTML: ClassVar[str] = ".figure.document.html"
 
     FILENAME_SCHEMA: ClassVar[str] = "figure.document.schema.json"
     FILENAME_HTML_TEMPLATE: ClassVar[str] = "figure.document.html.jinja2"
 
-    figures: List[senfd.figures.Figure] = Field(default_factory=list)
+    figures: List[Figure] = Field(default_factory=list)
 
 
 class FromDocx(Converter):
-
     @staticmethod
     def is_applicable(path: Path) -> bool:
         return path.suffix.lower() == ".docx"
@@ -52,7 +50,7 @@ class FromDocx(Converter):
         figures = {}
         errors: List[senfd.errors.TableError] = []
 
-        docx_document = docx.Document(path)
+        docx_document = docx.Document(str(path))
 
         # Add tabular figures -- page_nr unavailable
         for table_nr, docx_table in enumerate(docx_document.tables, 1):
@@ -85,6 +83,7 @@ class FromDocx(Converter):
         # Check table-of-figure description validity
         prev = cur = None
         for paragraph in docx_document.paragraphs:
+            assert paragraph.style
             cur = paragraph.style.name
 
             # We exit early to avoid scanning the entire document, since we know that

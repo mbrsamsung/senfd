@@ -11,8 +11,8 @@ from typing import ClassVar, Optional, Tuple
 
 from pydantic import BaseModel
 
-from senfd.errors import TableError
 import senfd.tables
+from senfd.errors import TableError
 from senfd.utils import pascal_to_snake
 
 
@@ -63,6 +63,7 @@ class Figure(BaseModel):
 
 
 class FromFigureDescriptionMatch(Figure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = ""
 
     @classmethod
     def from_figure_description(
@@ -203,5 +204,6 @@ def get_figure_enriching_classes():
         cls
         for _, cls in inspect.getmembers(senfd.figures, inspect.isclass)
         if issubclass(cls, senfd.figures.FromFigureDescriptionMatch)
+        and cls is not senfd.figures.FromFigureDescriptionMatch
         and hasattr(cls, "REGEX_FIGURE_DESCRIPTION")
     ]

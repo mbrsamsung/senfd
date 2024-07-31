@@ -38,13 +38,12 @@ class HeaderTable(Table):
     ]
 
     ncells: int = Field(default_factory=int)
-    headers: List[str] = Field(default_factory=list)
+    headers: List[str] = []  # Field(default_factory=list)
 
     @classmethod
     def from_table(
         cls, table: Table
     ) -> Tuple[Optional["HeaderTable"], Optional[senfd.errors.TableError]]:
-
         lengths = list(set([len(row.cells) for row in table.rows]))
         if len(lengths) != 1:
             return None, senfd.errors.IrregularTableError(
@@ -52,7 +51,7 @@ class HeaderTable(Table):
             )
 
         if len(table.rows) < 2:
-            return None, senfd.errors.NonTableHeaderError("Insufficent number of rows")
+            return None, senfd.errors.NonTableHeaderError("Insufficient number of rows")
 
         headers = [
             cell.text.strip()
@@ -65,11 +64,12 @@ class HeaderTable(Table):
                 table.rows[0].cells[0].text,
                 [cell.text for cell in table.rows[1].cells],
             )
-
-        data = table.dict()
+        # TODO: dict method is deprecated
+        data = table.model_dump()  # dict()
         data["ncells"] = lengths[0]
         data["headers"] = headers
 
         enriched = cls(**data)
+        print(enriched)
 
         return enriched, None

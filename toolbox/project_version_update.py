@@ -35,7 +35,6 @@ def bump_patch_version(version):
 
 
 def main():
-
     parser = argparse.ArgumentParser(description="Update version info.")
     parser.add_argument(
         "version",

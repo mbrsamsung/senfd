@@ -15,19 +15,15 @@ from senfd.documents.base import (
     strip_all_suffixes,
 )
 from senfd.documents.figure import FigureDocument
-from senfd.figures import get_figure_enriching_classes
+from senfd.figures import FromFigureDescriptionMatch, get_figure_enriching_classes
 
 
 class CategorizedFigureDocument(Document):
-
     SUFFIX_JSON: ClassVar[str] = ".categorized.figure.document.json"
     SUFFIX_HTML: ClassVar[str] = ".categorized.figure.document.html"
 
     FILENAME_SCHEMA: ClassVar[str] = "categorized.figure.document.schema.json"
     FILENAME_HTML_TEMPLATE: ClassVar[str] = "categorized.figure.document.html.jinja2"
-
-    nontabular: List[senfd.figures.Figure] = Field(default_factory=list)
-    uncategorized: List[senfd.figures.Figure] = Field(default_factory=list)
 
     acronyms: List[senfd.figures.Acronyms] = Field(default_factory=list)
     io_controller_command_set_support: List[
@@ -65,6 +61,8 @@ class CategorizedFigureDocument(Document):
     property_definition: List[senfd.figures.PropertyDefinition] = Field(
         default_factory=list
     )
+    nontabular: List[senfd.figures.Figure] = Field(default_factory=list)
+    uncategorized: List[senfd.figures.Figure] = Field(default_factory=list)
 
     @classmethod
     def from_figure_document_file(cls, path: Path):
@@ -75,7 +73,6 @@ class CategorizedFigureDocument(Document):
 
 
 class FromFigureDocument(Converter):
-
     @staticmethod
     def is_applicable(path: Path) -> bool:
         return "".join(path.suffixes).lower() == ".figure.document.json"
@@ -86,17 +83,20 @@ class FromFigureDocument(Converter):
 
         errors = []
 
+        # TODO: parse_file is deprecated
         figure_document = FigureDocument.parse_file(path)
 
         document = CategorizedFigureDocument()
         document.meta.stem = strip_all_suffixes(path.stem)
 
-        figure_organizers = get_figure_enriching_classes()
+        figure_organizers: List[FromFigureDescriptionMatch] = (
+            get_figure_enriching_classes()
+        )
+
         for figure in figure_document.figures:
             if not figure.table:
                 document.nontabular.append(figure)
                 continue
-
             match = None
             description = figure.description.translate(TRANSLATION_TABLE)
             for candidate in figure_organizers:
@@ -107,7 +107,9 @@ class FromFigureDocument(Converter):
                     obj, error = candidate.from_figure_description(figure, match)
                     if error:
                         errors.append(error)
-                    obj.into_document(document)
+                    if obj is not None:
+                        obj.into_document(document)
+                    print("This is stuff")
                     break
 
             if not match:
