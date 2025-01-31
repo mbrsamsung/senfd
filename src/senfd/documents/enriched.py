@@ -573,10 +573,12 @@ class FromFigureDocument(Converter):
         return errors
 
     @staticmethod
-    def enrich(cls, figure: Figure, match) -> Tuple[Optional[Figure], List[Error]]:
-        """Returns an EnrichedFigure from the givven Figure"""
+    def enrich(
+        cls, figure: Figure, match
+    ) -> Tuple[Optional[EnrichedFigure], List[Error]]:
+        """Returns an EnrichedFigure from the given Figure"""
 
-        errors: List[senfd.errors.Error] = []
+        errors: List[Error] = []
 
         # Merge figure data with fields from regex
         data = figure.model_dump()
