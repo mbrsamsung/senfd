@@ -151,6 +151,19 @@ class AcronymsFigure(EnrichedFigure):
     ]
 
 
+class AsynchronousEventInformationFigure(EnrichedFigure):
+
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^(Asynchronous.Event.Information.-)(?P<event>.*)$"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_VALUE,
+        REGEX_GRID_VALUE_DESCRIPTION,
+    ]
+
+    event: str
+
+
 class IoControllerCommandSetSupportRequirementFigure(EnrichedFigure):
     REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
         r".*-\s+(?P<command_set_name>.*)Command\s+Set\s+Support"
@@ -464,6 +477,26 @@ class StatusValueFigure(EnrichedFigure):
     ]
 
 
+class FormatFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*\s(Format).*$"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class FzrDwordFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^(Fabric Zoning Receive \(FZR\) - Command Dword)(?P<dword>.*)$"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+    dword: str
+
+
 class EnrichedFigureDocument(Document):
     SUFFIX_JSON: ClassVar[str] = ".enriched.figure.document.json"
     SUFFIX_HTML: ClassVar[str] = ".enriched.figure.document.html"
@@ -519,6 +552,11 @@ class EnrichedFigureDocument(Document):
     parameter_field: List[ParameterFieldFigure] = Field(default_factory=list)
     status_code: List[StatusCodeFigure] = Field(default_factory=list)
     status_value: List[StatusValueFigure] = Field(default_factory=list)
+    format: List[FormatFigure] = Field(default_factory=list)
+    fzr_dword: List[FzrDwordFigure] = Field(default_factory=list)
+    asynchronous_event_information: List[AsynchronousEventInformationFigure] = Field(
+        default_factory=list
+    )
     version_descriptor_field_value: List[VersionDescriptorFieldValueFigure] = Field(
         default_factory=list
     )
