@@ -111,6 +111,34 @@ class EnrichedFigure(Figure):
         getattr(document, key).append(self)
 
 
+"""
+The `EnrichedFigure` inherited classes will be used in
+a alphanumerical sorting, and this ordering is dictating the matching of figures
+with classes.
+
+See method `FromFigureDocument.get_figure_enriching_classes` for the
+actual implementation of the list.
+
+Since the functionality of matching figures with classes is by lazy regex
+match(Only search for first match, break out and use it), the name of the
+classes will have an impact on the ordering and thus the functionality.
+
+For ease of implementation some class names will be prepended with a capitol `A`
+to fix its ordering for matching.
+
+"""
+
+
+class ASetFeaturesCommandSpecificFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r".*Set.Features.-.Command.Specific.Status.Values.*"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
 class DataStructureFigure(EnrichedFigure):
     REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Data.Structure|Log.Page)$"
     REGEX_GRID: ClassVar[List[Tuple]] = [
@@ -419,6 +447,9 @@ class EnrichedFigureDocument(Document):
     ] = Field(default_factory=list)
     command_admin_opcode: List[CommandAdminOpcodeFigure] = Field(default_factory=list)
     command_io_opcode: List[CommandIoOpcodeFigure] = Field(default_factory=list)
+    a_set_features_command_specific: List[ASetFeaturesCommandSpecificFigure] = Field(
+        default_factory=list
+    )
     command_support_requirement: List[CommandSupportRequirementFigure] = Field(
         default_factory=list
     )
