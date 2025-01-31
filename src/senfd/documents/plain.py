@@ -136,6 +136,7 @@ class FromDocx(Converter):
         prev = cur = None
         tof_entry = 0
         for paragraph in docx_document.paragraphs:
+            assert paragraph.style is not None
             cur = paragraph.style.name
 
             # We exit early to avoid scanning the entire document, since we know that
