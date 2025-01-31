@@ -36,6 +36,11 @@ REGEX_GRID_RANGE = (
     r"(Bits|Bytes).*",
     r"(?!Note|specficiation)(?:(?P<upper>[0-9 \w\+\*]+):)?(?P<lower>[0-9 \w\+\*]+)",
 )
+REGEX_GRID_BIT_EMBEDDED_RANGE = (
+    r"(Bits).*",
+    r"(?!Note|specficiation)(?:(?P<upper_bits>[0-9 \w\+\*]+):)?(?P<lower_bits>[0-9 \w\+\*]+)",  # noqa
+)
+
 REGEX_GRID_ACRONYM = (r"(Term|Acronym).*", REGEX_ALL.replace("all", "term"))
 REGEX_GRID_SCOPE = (
     r"(Scope|Scope.and.Support).*",
@@ -73,6 +78,10 @@ REGEX_GRID_BITS_FUNCTION = (
 )
 REGEX_GRID_COMMAND_OPCODE = (
     r"(Combined.Opcode).*",
+    REGEX_VAL_HEXSTR.replace("hex", "opcode"),
+)
+REGEX_GRID_OPCODE_VALUE = (
+    r"(Opcode.Value).*",
     REGEX_VAL_HEXSTR.replace("hex", "opcode"),
 )
 REGEX_GRID_COMMAND_NAME = (
@@ -136,6 +145,54 @@ class ASetFeaturesCommandSpecificFigure(EnrichedFigure):
     REGEX_GRID: ClassVar[List[Tuple]] = [
         REGEX_GRID_RANGE,
         REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class AReservationDataStructureFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^.*(Reservation.Release.Data.Structure)$"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        (r"(O\/M).*", REGEX_VAL_REQUIREMENT),
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class ARpmbDeviceConfigurationDataStructureFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^.*(RPMB.Device.Configuration.Block.Data.Structure)$"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        (r"(Type).*", REGEX_ALL.replace("all", "type")),
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class AIdentifyDirectiveReturnDataStructureFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^.*(Identify.Directive.-.Return.Parameters.Data.Structure)$"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_BIT_EMBEDDED_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class AFabricsCommandSupportRequirementFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"\s*Fabrics\s*Command\s*Support\s*Requirements.*"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_COMMAND_NAME,
+        REGEX_GRID_OPCODE_VALUE,
+        (r"(Fabrics.Command.Type).*", REGEX_VAL_HEXSTR.replace("hex", "opcode")),
+        REGEX_GRID_IO,
+        REGEX_GRID_ADMIN,
+        REGEX_GRID_DISCOVERY,
+        REGEX_GRID_REF,
     ]
 
 
@@ -447,6 +504,18 @@ class EnrichedFigureDocument(Document):
     ] = Field(default_factory=list)
     command_admin_opcode: List[CommandAdminOpcodeFigure] = Field(default_factory=list)
     command_io_opcode: List[CommandIoOpcodeFigure] = Field(default_factory=list)
+    a_fabrics_command_support_requirement: List[
+        AFabricsCommandSupportRequirementFigure
+    ] = Field(default_factory=list)
+    a_reservation_data_structure: List[AReservationDataStructureFigure] = Field(
+        default_factory=list
+    )
+    a_rpmb_device_configuration_data_structure: List[
+        ARpmbDeviceConfigurationDataStructureFigure
+    ] = Field(default_factory=list)
+    a_identify_directive_return_data_structure: List[
+        AIdentifyDirectiveReturnDataStructureFigure
+    ] = Field(default_factory=list)
     a_set_features_command_specific: List[ASetFeaturesCommandSpecificFigure] = Field(
         default_factory=list
     )
