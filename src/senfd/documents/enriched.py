@@ -602,8 +602,8 @@ class FromFigureDocument(Converter):
         for row_idx, row in enumerate(enriched.table.rows[1:], 1):
             if not header_names:
                 header_matches = [
-                    match.group(1) if match else match
-                    for match in (
+                    header_match.group(1) if header_match else header_match
+                    for header_match in (
                         re.match(regex, cell.text.strip().replace("\n", " "))
                         for cell, regex in zip(row.cells, regex_hdr)
                     )
