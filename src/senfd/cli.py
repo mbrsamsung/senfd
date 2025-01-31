@@ -85,3 +85,7 @@ def main() -> int:
         merged.to_json_file(args.output / merged.json_filename())
 
     return 0
+
+
+if __name__ == "__main__":
+    main()
