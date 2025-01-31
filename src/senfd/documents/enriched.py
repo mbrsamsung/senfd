@@ -239,7 +239,7 @@ class CommandSqeDwordLowerUpperFigure(EnrichedFigure):
 
 class CommandSqeDwordFigure(EnrichedFigure):
     REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
-        r"^(?P<command_name>[a-zA-Z\w\s\/]+(?:\(\w\))?)\s+-\s+"
+        r"^(?P<command_name>[-a-zA-Z\w\s\/]+(?:\(\w\))?)\s+-\s+"
         r"Command\s*Dword\s*(?P<command_dword>\d+)$"
     )
     REGEX_GRID: ClassVar[List[Tuple]] = [
