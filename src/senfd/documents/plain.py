@@ -165,7 +165,7 @@ class FromDocx(Converter):
             if not figure.page_nr:
                 errors.append(
                     senfd.errors.TableOfFiguresError(
-                        entry_nr=tof_entry,
+                        tof_entry_nr=tof_entry,
                         message="Is missing <page_nr>",
                         caption=caption,
                     )
