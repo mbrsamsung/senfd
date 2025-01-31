@@ -419,6 +419,22 @@ class PropertyDefinitionFigure(EnrichedFigure):
     ]
 
 
+class StatusCodeFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^(Status.Code.-).*$"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_VALUE,
+        REGEX_GRID_VALUE_DESCRIPTION,
+    ]
+
+
+class StatusValueFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Status.Value).*$"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_VALUE,
+        REGEX_GRID_VALUE_DESCRIPTION,
+    ]
+
+
 class EnrichedFigureDocument(Document):
     SUFFIX_JSON: ClassVar[str] = ".enriched.figure.document.json"
     SUFFIX_HTML: ClassVar[str] = ".enriched.figure.document.html"
@@ -470,6 +486,8 @@ class EnrichedFigureDocument(Document):
     offset: List[OffsetFigure] = Field(default_factory=list)
     property_definition: List[PropertyDefinitionFigure] = Field(default_factory=list)
 
+    status_code: List[StatusCodeFigure] = Field(default_factory=list)
+    status_value: List[StatusValueFigure] = Field(default_factory=list)
     version_descriptor_field_value: List[VersionDescriptorFieldValueFigure] = Field(
         default_factory=list
     )
