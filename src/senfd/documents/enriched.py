@@ -398,6 +398,32 @@ class OffsetFigure(EnrichedFigure):
     ]
 
 
+class ParameterFieldFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Parameter.Field)$"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class DescriptorFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Descriptor)$"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class CompletionQueueFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^(?:Fabrics.Response.-)?(Completion.Queue).*$"
+    )
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
 class PropertyDefinitionFigure(EnrichedFigure):
     REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r".*Property Definition.*"
     REGEX_GRID: ClassVar[List[Tuple]] = [
@@ -485,7 +511,9 @@ class EnrichedFigureDocument(Document):
     log_page_identifier: List[LogPageIdentifierFigure] = Field(default_factory=list)
     offset: List[OffsetFigure] = Field(default_factory=list)
     property_definition: List[PropertyDefinitionFigure] = Field(default_factory=list)
-
+    descriptor: List[DescriptorFigure] = Field(default_factory=list)
+    completion_queue: List[CompletionQueueFigure] = Field(default_factory=list)
+    parameter_field: List[ParameterFieldFigure] = Field(default_factory=list)
     status_code: List[StatusCodeFigure] = Field(default_factory=list)
     status_value: List[StatusValueFigure] = Field(default_factory=list)
     version_descriptor_field_value: List[VersionDescriptorFieldValueFigure] = Field(
