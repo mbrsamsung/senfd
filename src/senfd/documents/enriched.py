@@ -27,7 +27,8 @@ REGEX_VAL_FIELD_DESCRIPTION = (
     r"(?P<name>[ \/\-\w]+)" r"(\((?P<acronym>[^\)]+)\))?" r"(:\s*(?P<description>.*))?"
 )
 REGEX_VAL_VALUE_DESCRIPTION = r"(?P<name>[ \w]+)" r"(:\s*(?P<description>.*))?"
-REGEX_VAL_REQUIREMENT = r"^(?:(?P<requirement>O|M|P|NR)(?:[ \d]*))?$"
+REGEX_VAL_REQUIREMENT = r"^(?:(?P<requirement>O|M|P|NR|Note)(?:[ \d]*))?$"
+REGEX_VAL_REFERENCE = r"^(?P<reference>\d+\.\d+(?:\.\d+)?)$"
 REGEX_VAL_YESNO = r"(?P<yn>NOTE|Note|Yes|No|Y|N)[ \d]*?"
 
 REGEX_HDR_EXPLANATION = r"(Definition|Description).*"
@@ -100,10 +101,21 @@ REGEX_GRID_COMMANDS_AFFECTED = (
     r"(Commands.Affected).*",
     REGEX_ALL.replace("all", "comma"),
 )
+REGEX_GRID_IO = (
+    r"(I/O).*",
+    REGEX_VAL_REQUIREMENT.replace("requirement", "req_io"),
+)
+REGEX_GRID_ADMIN = (
+    r"(Admin).*",
+    REGEX_VAL_REQUIREMENT.replace("requirement", "req_admin"),
+)
+REGEX_GRID_DISCOVERY = (
+    r"(Disc).*",
+    REGEX_VAL_REQUIREMENT.replace("requirement", "req_discovery"),
+)
 
 
 class EnrichedFigure(Figure):
-
     grid: senfd.tables.Grid = Field(default_factory=senfd.tables.Grid)
 
     def into_document(self, document):
@@ -154,7 +166,11 @@ class CommandSupportRequirementFigure(EnrichedFigure):
     )
     REGEX_GRID: ClassVar[List[Tuple]] = [
         REGEX_GRID_COMMAND_NAME,
-        REGEX_GRID_REQUIREMENTS,
+        REGEX_GRID_COMMAND_OPCODE,
+        REGEX_GRID_IO,
+        REGEX_GRID_ADMIN,
+        REGEX_GRID_DISCOVERY,
+        REGEX_GRID_REFERENCE,
     ]
 
     command_span: str
@@ -404,7 +420,6 @@ class PropertyDefinitionFigure(EnrichedFigure):
 
 
 class EnrichedFigureDocument(Document):
-
     SUFFIX_JSON: ClassVar[str] = ".enriched.figure.document.json"
     SUFFIX_HTML: ClassVar[str] = ".enriched.figure.document.html"
 
@@ -481,7 +496,6 @@ class FromFigureDocument(Converter):
 
     @staticmethod
     def check_regex(figure, match) -> List[senfd.errors.Error]:
-
         shared = set(figure.model_dump().keys()).intersection(
             set(match.groupdict().keys())
         )
@@ -635,7 +649,6 @@ class FromFigureDocument(Converter):
             combined = {}
             value_errors = []
             for cell_idx, (cell, regex) in enumerate(zip(row.cells, regex_val)):
-
                 text = cell.text.strip().translate(TRANSLATION_TABLE)
                 match = re.match(regex, text)
                 if match:
