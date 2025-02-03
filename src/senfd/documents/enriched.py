@@ -53,8 +53,8 @@ REGEX_GRID_FEATURE_NAME = (
     REGEX_VAL_NAME.replace("name", "feature_name"),
 )
 REGEX_GRID_FEATURE_IDENTIFIER = (
-    r"(Feature.Identifier).*",
-    REGEX_VAL_HEXSTR.replace("hex", "feature_identifier"),
+    r"^(Feature|Log Page).Identifier.*",
+    REGEX_VAL_HEXSTR.replace("hex", "identifier"),
 )
 REGEX_GRID_FEATURE_PAPCR = (
     r"(Persistent.Across.Power.Cycle.and.Reset)",
