@@ -52,6 +52,10 @@ REGEX_GRID_FEATURE_NAME = (
     r"(Feature.Name).*",
     REGEX_VAL_NAME.replace("name", "feature_name"),
 )
+REGEX_GRID_NAME = (
+    r".*(Name).*",
+    REGEX_VAL_NAME,
+)
 REGEX_GRID_FEATURE_IDENTIFIER = (
     r"^(Feature|Log Page).Identifier.*",
     REGEX_VAL_HEXSTR.replace("hex", "identifier"),
@@ -152,7 +156,6 @@ class AcronymsFigure(EnrichedFigure):
 
 
 class AsynchronousEventInformationFigure(EnrichedFigure):
-
     REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
         r"^(Asynchronous.Event.Information.-)(?P<event>.*)$"
     )
@@ -497,6 +500,18 @@ class FzrDwordFigure(EnrichedFigure):
     dword: str
 
 
+class RequirementsFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Requirements)$"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_NAME,
+        REGEX_GRID_FEATURE_IDENTIFIER,
+        REGEX_GRID_IO,
+        REGEX_GRID_ADMIN,
+        REGEX_GRID_DISCOVERY,
+        REGEX_GRID_REFERENCE,
+    ]
+
+
 class EnrichedFigureDocument(Document):
     SUFFIX_JSON: ClassVar[str] = ".enriched.figure.document.json"
     SUFFIX_HTML: ClassVar[str] = ".enriched.figure.document.html"
@@ -557,6 +572,7 @@ class EnrichedFigureDocument(Document):
     asynchronous_event_information: List[AsynchronousEventInformationFigure] = Field(
         default_factory=list
     )
+    requirements: List[RequirementsFigure] = Field(default_factory=list)
     version_descriptor_field_value: List[VersionDescriptorFieldValueFigure] = Field(
         default_factory=list
     )
