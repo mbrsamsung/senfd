@@ -28,7 +28,7 @@ REGEX_VAL_FIELD_DESCRIPTION = (
 )
 REGEX_VAL_VALUE_DESCRIPTION = r"(?P<name>[ \w]+)" r"(:\s*(?P<description>.*))?"
 REGEX_VAL_REQUIREMENT = r"^(?:(?P<requirement>O|M|P|NR|Note)(?:[ \d]*))?$"
-REGEX_VAL_REFERENCE = r"^(?P<reference>\d+\.\d+(?:\.\d+)?)$"
+REGEX_VAL_REFERENCE = r"^(?P<reference>\d+\.\d+(?:\.\d+)?(?:\.\d+)?(?:\.\d+)?)$"
 REGEX_VAL_YESNO = r"(?P<yn>NOTE|Note|Yes|No|Y|N)[ \d]*?"
 
 REGEX_HDR_EXPLANATION = r"(Definition|Description).*"
