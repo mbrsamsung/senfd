@@ -2,7 +2,7 @@ import inspect
 import re
 from argparse import Namespace
 from pathlib import Path
-from typing import ClassVar, List, Optional, Tuple
+from typing import ClassVar, List, Optional, Tuple, Type, TypeVar
 
 from pydantic import Field
 
@@ -591,6 +591,11 @@ class EnrichedFigureDocument(Document):
     skipped: List[Figure] = Field(default_factory=list)
 
 
+# EnrichedFigureType is a virtual type that binds to `EnrichedFigure` such
+# that it enforces that `EnrichedFigureType` needs to be a child of `EnrichedFigure`
+EnrichedFigureType = TypeVar("EnrichedFigureType", bound=EnrichedFigure)
+
+
 class FromFigureDocument(Converter):
     """
     Constructs an EnrichedDocument from a given PlainDocument
@@ -697,7 +702,7 @@ class FromFigureDocument(Converter):
 
     @staticmethod
     def enrich(
-        cls, figure: Figure, match
+        cls: Type[EnrichedFigureType], figure: Figure, match
     ) -> Tuple[Optional[EnrichedFigure], List[Error]]:
         """Returns an EnrichedFigure from the given Figure"""
 
@@ -708,7 +713,8 @@ class FromFigureDocument(Converter):
         mdict = match.groupdict()
         if mdict:
             data.update(mdict if mdict else {})
-        enriched = cls(**data)
+
+        enriched: EnrichedFigure = cls(**data)
 
         # Check for non-blocking error-conditions
         errors += FromFigureDocument.check_regex(enriched, match)
@@ -724,6 +730,7 @@ class FromFigureDocument(Converter):
 
         fields: List[str] = []
         values: List[List[str | int]] = []
+        assert enriched.table
         for row_idx, row in enumerate(enriched.table.rows[1:], 1):
             if not header_names:
                 header_matches = [
