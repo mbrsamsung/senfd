@@ -120,6 +120,9 @@ REGEX_GRID_DISCOVERY = (
 
 
 class EnrichedFigure(Figure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str]
+    REGEX_GRID: ClassVar[List[Tuple]]
+
     grid: senfd.tables.Grid = Field(default_factory=senfd.tables.Grid)
 
     def into_document(self, document):
