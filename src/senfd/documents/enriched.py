@@ -79,7 +79,7 @@ REGEX_GRID_BITS_FUNCTION = (
     r"(?P<bitstr>\d{4}\s\d{2}b)",
 )
 REGEX_GRID_COMMAND_OPCODE = (
-    r"(Combined.Opcode).*",
+    r"(Combined.Opcode|Opcode.Value).*",
     REGEX_VAL_HEXSTR.replace("hex", "opcode"),
 )
 REGEX_GRID_COMMAND_NAME = (
