@@ -96,6 +96,13 @@ REGEX_GRID_USES_NSID = (
 REGEX_GRID_USES_CNTID = (r"(CNTID).*", REGEX_VAL_YESNO.replace("yn", "uses_cntid"))
 REGEX_GRID_USES_CSI = (r"(CSI).*", REGEX_VAL_YESNO.replace("yn", "uses_csi"))
 REGEX_GRID_VALUE = (r"(Value).*", REGEX_VAL_HEXSTR.replace("hex", "value"))
+
+REGEX_GRID_TYPE = (r".*(Value|Type).*", REGEX_VAL_HEXSTR.replace("hex", "value"))
+REGEX_GRID_TYPE_DESCRIPTION = (
+    r".*(Event|Definition|Description).*",
+    REGEX_VAL_VALUE_DESCRIPTION,
+)
+
 REGEX_GRID_LPI = (
     r"(Log.Page.Identifier).*",
     REGEX_VAL_HEXSTR.replace("hex", "log_page_identifier"),
@@ -147,6 +154,14 @@ class IdentifyDataStructureFigure(EnrichedFigure):
         REGEX_GRID_ADMIN,
         REGEX_GRID_DISCOVERY,
         REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
+class DataTypeFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Types).*$"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_TYPE,
+        REGEX_GRID_TYPE_DESCRIPTION,
     ]
 
 
@@ -576,6 +591,8 @@ class EnrichedFigureDocument(Document):
         default_factory=list
     )
     requirements: List[RequirementsFigure] = Field(default_factory=list)
+
+    data_type: List[DataTypeFigure] = Field(default_factory=list)
     version_descriptor_field_value: List[VersionDescriptorFieldValueFigure] = Field(
         default_factory=list
     )
