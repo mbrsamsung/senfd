@@ -138,7 +138,9 @@ class EnrichedFigure(Figure):
 
 
 class DataStructureFigure(EnrichedFigure):
-    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Data.Structure|Log.Page)$"
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^(?!.*Status Code|.*Vendor|.*Log.Page.Identifiers|.*Types).*(Log.Page|Data.Structure|Data).*$"
+    )
     REGEX_GRID: ClassVar[List[Tuple]] = [
         REGEX_GRID_RANGE,
         REGEX_GRID_FIELD_DESCRIPTION,
