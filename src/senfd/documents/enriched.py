@@ -723,7 +723,7 @@ class FromFigureDocument(Converter):
 
     @staticmethod
     def enrich(
-        cls: Type[EnrichedFigureType], figure: Figure, match
+        cls: Type[EnrichedFigureType], figure: Figure, match: re.Match
     ) -> Tuple[Optional[EnrichedFigure], List[Error]]:
         """Returns an EnrichedFigure from the given Figure"""
 
@@ -784,10 +784,10 @@ class FromFigureDocument(Converter):
                 continue
 
             combined = {}
-            value_errors = []
+            value_errors: List[Error] = []
             for cell_idx, (cell, regex) in enumerate(zip(row.cells, regex_val)):
                 text = cell.text.strip().translate(TRANSLATION_TABLE)
-                match = re.match(regex, text)
+                match = re.match(regex, text)  # type: ignore
                 if match:
                     combined.update(match.groupdict())
                     continue
