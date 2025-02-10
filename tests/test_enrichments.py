@@ -20,6 +20,6 @@ def test_enriching_classes_regex_grid_overlap():
 
         for i in range(len(list_of_sets)):
             for j in range(i + 1, len(list_of_sets)):
-                assert not list_of_sets[i].intersection(
-                    list_of_sets[j]
-                ), f"cls({cls.__name__}) has overlapping REGEX_GRID values"
+                assert not list_of_sets[i].intersection(list_of_sets[j]), (
+                    f"cls({cls.__name__}) has overlapping REGEX_GRID values"
+                )

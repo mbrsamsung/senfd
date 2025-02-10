@@ -163,7 +163,6 @@ class Document(BaseModel):
 
 
 class Converter(ABC):
-
     @staticmethod
     @abstractmethod
     def is_applicable(path: Path) -> bool:

@@ -8,6 +8,5 @@ PASCAL = [
 
 
 def test_conversions():
-
     for pascal in PASCAL:
         assert snake_to_pascal(pascal_to_snake(pascal)) == pascal
