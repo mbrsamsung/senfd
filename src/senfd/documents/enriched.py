@@ -501,7 +501,9 @@ class StatusValueFigure(EnrichedFigure):
 
 
 class FormatFigure(EnrichedFigure):
-    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*\s(Format).*$"
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
+        r"^(?!.*IEEE|Sanitize.Operations).*\s(Format).*$"
+    )
     REGEX_GRID: ClassVar[List[Tuple]] = [
         REGEX_GRID_RANGE,
         REGEX_GRID_FIELD_DESCRIPTION,
