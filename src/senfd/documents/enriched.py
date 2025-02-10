@@ -512,18 +512,6 @@ class FormatFigure(EnrichedFigure):
     ]
 
 
-class FzrDwordFigure(EnrichedFigure):
-    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = (
-        r"^(Fabric Zoning Receive \(FZR\) - Command Dword)(?P<dword>.*)$"
-    )
-    REGEX_GRID: ClassVar[List[Tuple]] = [
-        REGEX_GRID_RANGE,
-        REGEX_GRID_FIELD_DESCRIPTION,
-    ]
-
-    dword: str
-
-
 class RequirementsFigure(EnrichedFigure):
     REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Requirements)$"
     REGEX_GRID: ClassVar[List[Tuple]] = [
@@ -592,7 +580,6 @@ class EnrichedFigureDocument(Document):
     status_code: List[StatusCodeFigure] = Field(default_factory=list)
     status_value: List[StatusValueFigure] = Field(default_factory=list)
     format: List[FormatFigure] = Field(default_factory=list)
-    fzr_dword: List[FzrDwordFigure] = Field(default_factory=list)
     asynchronous_event_information: List[AsynchronousEventInformationFigure] = Field(
         default_factory=list
     )
