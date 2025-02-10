@@ -9,7 +9,6 @@ from senfd.documents.model import ModelDocument
 
 
 class FromFolder(Converter):
-
     @staticmethod
     def is_applicable(path: Path) -> bool:
         return path.is_dir() and all(path.glob(f"*{ModelDocument.SUFFIX_JSON}"))

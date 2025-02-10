@@ -10,7 +10,6 @@ from senfd.documents.enriched import EnrichedFigureDocument
 
 
 class ModelDocument(Document):
-
     SUFFIX_JSON: ClassVar[str] = ".model.document.json"
     SUFFIX_HTML: ClassVar[str] = ".model.document.html"
 
@@ -21,7 +20,6 @@ class ModelDocument(Document):
 
 
 class FromEnrichedDocument(Converter):
-
     @staticmethod
     def is_applicable(path: Path) -> bool:
         return "".join(path.suffixes).lower() == EnrichedFigureDocument.SUFFIX_JSON
@@ -30,7 +28,6 @@ class FromEnrichedDocument(Converter):
     def extract_command_set(
         document: ModelDocument, enriched: EnrichedFigureDocument
     ) -> List[senfd.errors.Error]:
-
         errors: List[senfd.errors.Error] = []
 
         if not enriched.command_io_opcode:

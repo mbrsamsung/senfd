@@ -9,6 +9,7 @@ Requirements
 
 * Python 3.11 (tomllib)
 """
+
 import argparse
 import re
 import sys
@@ -35,7 +36,6 @@ def bump_patch_version(version):
 
 
 def main():
-
     parser = argparse.ArgumentParser(description="Update version info.")
     parser.add_argument(
         "version",
@@ -58,7 +58,7 @@ def main():
             match = re.match(regex, line)
             if match:
                 data = match.groupdict()
-                updated = f'{data["before"]}{version}{data["after"]}'
+                updated = f"{data['before']}{version}{data['after']}"
                 lines.append(updated)
             else:
                 lines.append(line)

@@ -20,7 +20,6 @@ from senfd.errors import Error
 
 
 def to_log_file(errors: List[Error], filename: str, output: Path) -> Path:
-
     content = json.dumps(
         [{"type": type(error).__name__, **error.model_dump()} for error in errors],
         indent=4,

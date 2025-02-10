@@ -7,7 +7,6 @@ FILENAME = "testtofile.txt"
 
 
 def test_to_file_without_a_path(tmp_path):
-
     orig = os.getcwd()
     os.chdir(tmp_path)
 
@@ -19,7 +18,6 @@ def test_to_file_without_a_path(tmp_path):
 
 
 def test_to_file_with_a_dirpath(tmp_path):
-
     path = to_file(CONTENT, FILENAME, tmp_path)
     back = path.read_text()
 
@@ -27,7 +25,6 @@ def test_to_file_with_a_dirpath(tmp_path):
 
 
 def test_to_file_with_a_filepath(tmp_path):
-
     path = to_file(CONTENT, FILENAME, tmp_path / FILENAME)
     back = path.read_text()
 

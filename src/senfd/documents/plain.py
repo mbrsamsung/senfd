@@ -57,7 +57,6 @@ class Figure(BaseModel):
 
 
 class FigureDocument(Document):
-
     SUFFIX_JSON: ClassVar[str] = ".plain.figure.document.json"
     SUFFIX_HTML: ClassVar[str] = ".plain.figure.document.html"
 
@@ -68,7 +67,6 @@ class FigureDocument(Document):
 
 
 class FromDocx(Converter):
-
     @staticmethod
     def is_applicable(path: Path) -> bool:
         return path.suffix.lower() == ".docx"
