@@ -445,6 +445,14 @@ class ParameterFieldFigure(EnrichedFigure):
     ]
 
 
+class SubmissionQueueFigure(EnrichedFigure):
+    REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r".*(Submission.Queue.Entry).*"
+    REGEX_GRID: ClassVar[List[Tuple]] = [
+        REGEX_GRID_RANGE,
+        REGEX_GRID_FIELD_DESCRIPTION,
+    ]
+
+
 class DescriptorFigure(EnrichedFigure):
     REGEX_FIGURE_DESCRIPTION: ClassVar[str] = r"^.*(Descriptor)$"
     REGEX_GRID: ClassVar[List[Tuple]] = [
@@ -575,6 +583,7 @@ class EnrichedFigureDocument(Document):
     descriptor: List[DescriptorFigure] = Field(default_factory=list)
     completion_queue: List[CompletionQueueFigure] = Field(default_factory=list)
     parameter_field: List[ParameterFieldFigure] = Field(default_factory=list)
+    submission_queue: List[SubmissionQueueFigure] = Field(default_factory=list)
     status_code: List[StatusCodeFigure] = Field(default_factory=list)
     status_value: List[StatusValueFigure] = Field(default_factory=list)
     format: List[FormatFigure] = Field(default_factory=list)
