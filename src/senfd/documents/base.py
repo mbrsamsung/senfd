@@ -9,6 +9,7 @@ specification document from a raw extract into something semantically rich.
 import importlib.resources as pkg_resources
 import json
 from abc import ABC, abstractmethod
+from argparse import Namespace
 from pathlib import Path
 from typing import Any, ClassVar, Dict, List, Optional, Tuple
 
@@ -170,5 +171,5 @@ class Converter(ABC):
 
     @staticmethod
     @abstractmethod
-    def convert(path: Path) -> Tuple[Document, List[Error]]:
+    def convert(path: Path, args: Namespace) -> Tuple[Document, List[Error]]:
         """Convert the given 'path' into a 'Document'"""

@@ -1,5 +1,6 @@
 import inspect
 import re
+from argparse import Namespace
 from pathlib import Path
 from typing import ClassVar, List, Optional, Tuple
 
@@ -16,6 +17,7 @@ from senfd.documents.base import (
 )
 from senfd.documents.plain import Figure, FigureDocument
 from senfd.errors import Error
+from senfd.skiplist import SkipPatterns
 from senfd.utils import pascal_to_snake
 
 REGEX_ALL = r"(?P<all>.*)"
@@ -583,6 +585,7 @@ class EnrichedFigureDocument(Document):
 
     nontabular: List[Figure] = Field(default_factory=list)
     uncategorized: List[Figure] = Field(default_factory=list)
+    skipped: List[Figure] = Field(default_factory=list)
 
 
 class FromFigureDocument(Converter):
@@ -817,20 +820,24 @@ class FromFigureDocument(Converter):
         ]
 
     @staticmethod
-    def convert(path: Path) -> Tuple[Document, List[Error]]:
+    def convert(path: Path, args: Namespace) -> Tuple[Document, List[Error]]:
         """Instantiate an 'organized' Document from a 'figure' document"""
 
         errors = []
 
         figure_document = FigureDocument.model_validate_json(path.read_text())
+        skip_patterns = args.skip_figures
 
         document = EnrichedFigureDocument()
         document.meta.stem = strip_all_suffixes(path.stem)
-
+        skip_set = SkipPatterns(skip_patterns, figure_document.figures)
         figure_organizers = FromFigureDocument.get_figure_enriching_classes()
         for figure in figure_document.figures:
             if not figure.table:
                 document.nontabular.append(figure)
+                continue
+            if skip_set.skip_figure(figure):
+                document.skipped.append(figure)
                 continue
 
             match = None

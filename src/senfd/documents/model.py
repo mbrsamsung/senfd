@@ -1,3 +1,4 @@
+from argparse import Namespace
 from pathlib import Path
 from typing import ClassVar, Dict, List, Tuple
 
@@ -79,7 +80,9 @@ class FromEnrichedDocument(Converter):
         return errors
 
     @staticmethod
-    def convert(path: Path) -> Tuple[Document, List[senfd.errors.Error]]:
+    def convert(
+        path: Path, args: Namespace
+    ) -> Tuple[Document, List[senfd.errors.Error]]:
         """Instantiate an 'organized' Document from a 'figure' document"""
 
         errors: List[senfd.errors.Error] = []

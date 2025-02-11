@@ -10,6 +10,7 @@ dependencies = [
     "jinja2",
     "pydantic",
     "python-docx",
+    "tomli"
 ]
 readme = { file = "README.rst", content-type = "text/x-rst" }
 

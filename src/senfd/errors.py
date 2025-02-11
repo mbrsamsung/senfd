@@ -77,3 +77,7 @@ class CannotDetermineCommandRequirement(FigureError):
 
 class InvalidBitTableEntry(FigureError):
     pass
+
+
+class MultipleClassifierMatchException(Exception):
+    pass
