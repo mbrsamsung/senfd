@@ -1,4 +1,5 @@
 import re
+from argparse import Namespace
 from pathlib import Path
 from typing import ClassVar, Dict, List, Optional, Tuple
 
@@ -72,7 +73,7 @@ class FromDocx(Converter):
         return path.suffix.lower() == ".docx"
 
     @staticmethod
-    def convert(path: Path) -> Tuple[FigureDocument, List[Error]]:
+    def convert(path: Path, args: Namespace) -> Tuple[FigureDocument, List[Error]]:
         def docx_table_to_table(docx_table: docx.table.Table) -> Table:
             table = Table()
 

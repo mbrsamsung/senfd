@@ -1,4 +1,5 @@
 import json
+from argparse import Namespace
 from pathlib import Path
 from typing import List, Tuple
 
@@ -14,7 +15,9 @@ class FromFolder(Converter):
         return path.is_dir() and all(path.glob(f"*{ModelDocument.SUFFIX_JSON}"))
 
     @staticmethod
-    def convert(path: Path) -> Tuple[Document, List[senfd.errors.Error]]:
+    def convert(
+        path: Path, args: Namespace
+    ) -> Tuple[Document, List[senfd.errors.Error]]:
         """Instantiate an 'organized' Document from a 'figure' document"""
 
         errors: List[senfd.errors.Error] = []

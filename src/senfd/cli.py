@@ -6,7 +6,7 @@ Produces organized and semantically enriched ``.json`` documents from
 """
 
 import json
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser, Namespace, RawTextHelpFormatter
 from pathlib import Path
 from typing import List
 
@@ -17,6 +17,34 @@ from senfd.documents import get_document_classes
 from senfd.documents.base import to_file
 from senfd.documents.merged import FromFolder
 from senfd.errors import Error
+
+PARSEARGS_EPILOG = """\
+Senfd
+=====
+
+The --skip-figures flag specifies a path to a TOML file containing a list of
+figures to be skipped during processing.
+
+The TOML file must follow this format:
+
+[[skip]]
+regex = "^Decimal.and.Binary.Units$"
+matches = 1
+description = ""
+
+[[skip]]
+regex = "^Byte, Word, and Dword Relationships$"
+matches = 1
+description = ""
+
+
+Each entry under [[skip]] consists of:
+  - regex: A regular expression matching the figure description.
+  - matches: The expected number of occurrences of this figure in the document.
+  - description: An optional text field describing the reason for skipping.
+
+This allows flexible and pattern-based skipping of figures during execution.
+"""
 
 
 def to_log_file(errors: List[Error], filename: str, output: Path) -> Path:
@@ -31,7 +59,11 @@ def to_log_file(errors: List[Error], filename: str, output: Path) -> Path:
 def parse_args() -> Namespace:
     """Return command-line arguments"""
 
-    parser = ArgumentParser(description="Semantically organize and enrich figures")
+    parser = ArgumentParser(
+        description="Semantically organize and enrich figures",
+        epilog=PARSEARGS_EPILOG,
+        formatter_class=RawTextHelpFormatter,
+    )
     parser.add_argument(
         "document", nargs="*", type=Path, help="path to one or more document(s)"
     )
@@ -45,6 +77,11 @@ def parse_args() -> Namespace:
         "--dump-schema",
         action="store_true",
         help="dump schema(s) and exit",
+    )
+    parser.add_argument(
+        "--skip-figures",
+        type=Path,
+        help="Path to toml file that contains list of figure classifiers to skip",
     )
     parser.add_argument(
         "--version",
@@ -76,11 +113,11 @@ def main() -> int:
     for count, path in enumerate(sorted(args.document), 1):
         args.output.mkdir(parents=True, exist_ok=True)
 
-        errors = senfd.pipeline.process(path, args.output)
+        errors = senfd.pipeline.process(path, args.output, args)
         to_log_file(errors, path.stem, args.output)
 
     if FromFolder.is_applicable(args.output):  # Merge ModelDocuments
-        merged, errors = FromFolder.convert(args.output)
+        merged, errors = FromFolder.convert(args.output, args)
         merged.to_json_file(args.output / merged.json_filename())
 
     return 0
